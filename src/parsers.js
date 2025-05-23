@@ -1,18 +1,18 @@
-import fs from 'fs';
 import path from 'path';
+import yaml from 'js-yaml';
 
-const getData = (filepath) => {
-  const fullPath = path.resolve(process.cwd(), filepath);
-  const ext = path.extname(fullPath);
-
-  const rawData = fs.readFileSync(fullPath, 'utf-8');
-
-  switch (ext) {
-    case '.json':
-      return JSON.parse(rawData);
+const parse = (data, format) => {
+  switch (format) {
+    case 'json':
+      return JSON.parse(data);
+    case 'yml':
+    case 'yaml':
+      return yaml.load(data);
     default:
-      throw new Error(`Unsupported file format: ${ext}`);
+      throw new Error(`Unsupported format: ${format}`);
   }
 };
 
-export default getData;
+const getFormat = (filepath) => path.extname(filepath).slice(1);
+
+export { parse, getFormat };
