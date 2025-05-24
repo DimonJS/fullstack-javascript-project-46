@@ -41,6 +41,6 @@ const formatStylish = (tree, depth = 1) => {
   })
 
   return `{\n${lines.join('\n')}\n${getBracketIndent(depth)}}`
-};
+}
 
 export default formatStylish
