@@ -1,31 +1,31 @@
-import _ from 'lodash';
+import _ from 'lodash'
 
 const stringify = (value) => {
-  if (_.isObject(value)) return '[complex value]';
-  if (typeof value === 'string') return `'${value}'`;
-  return String(value);
+  if (_.isObject(value)) return '[complex value]'
+  if (typeof value === 'string') return `'${value}'`
+  return String(value)
 };
 
 const iter = (tree, path = '') => {
   const lines = tree
     .flatMap((node) => {
-      const property = path ? `${path}.${node.key}` : node.key;
+      const property = path ? `${path}.${node.key}` : node.key
 
       switch (node.type) {
         case 'added':
-          return `Property '${property}' was added with value: ${stringify(node.value)}`;
+          return `Property '${property}' was added with value: ${stringify(node.value)}`
         case 'removed':
-          return `Property '${property}' was removed`;
+          return `Property '${property}' was removed`
         case 'updated':
-          return `Property '${property}' was updated. From ${stringify(node.oldValue)} to ${stringify(node.newValue)}`;
+          return `Property '${property}' was updated. From ${stringify(node.oldValue)} to ${stringify(node.newValue)}`
         case 'nested':
-          return iter(node.children, property);
+          return iter(node.children, property)
         default:
-          return [];
+          return []
       }
-    });
+    })
 
-  return lines.join('\n');
-};
+  return lines.join('\n')
+}
 
-export default iter;
+export default iter
