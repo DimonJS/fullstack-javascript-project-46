@@ -1,14 +1,18 @@
 import formatStylish from './stylish.js';
 import formatPlain from './plain.js';
+import formatJson from './json.js';
 
-const formatterMap = {
-  stylish: formatStylish,
-  plain: formatPlain,
-};
-
-export default (diff, formatName = 'stylish') => {
-  if (!formatterMap[formatName]) {
-    throw new Error(`Unknown format: ${formatName}`);
+const getFormatter = (diff, formatName) => {
+  switch (formatName) {
+    case 'stylish':
+      return formatStylish(diff);
+    case 'plain':
+      return formatPlain(diff);
+    case 'json':
+      return formatJson(diff);
+    default:
+      throw new Error(`Unknown format: ${formatName}`);
   }
-  return formatterMap[formatName](diff);
 };
+
+export default getFormatter;
