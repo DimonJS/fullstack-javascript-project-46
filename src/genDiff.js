@@ -1,26 +1,18 @@
-import _ from 'lodash';
+import { readFileSync } from 'fs';
+import path from 'path';
+import parse from './parsers.js';
+import buildDiff from './buildDiff.js';
+import formatStylish from './formatters/stylish.js';
 
-const genDiff = (data1, data2) => {
-  const keys = _.sortBy(_.union(Object.keys(data1), Object.keys(data2)));
+const getFullPath = (filename) => path.resolve(process.cwd(), '__fixtures__', filename);
+const getData = (filepath) => parse(readFileSync(getFullPath(filepath), 'utf-8'), path.extname(filepath));
 
-  const lines = keys.map((key) => {
-    if (!_.has(data2, key)) {
-      return `  - ${key}: ${data1[key]}`;
-    }
-    if (!_.has(data1, key)) {
-      return `  + ${key}: ${data2[key]}`;
-    }
-    if (!_.isEqual(data1[key], data2[key])) {
-      return [
-        `  - ${key}: ${data1[key]}`,
-        `  + ${key}: ${data2[key]}`,
-      ];
-    }
-    return `    ${key}: ${data1[key]}`;
-  });
+const genDiff = (filepath1, filepath2, format = 'stylish') => {
+  const obj1 = getData(filepath1);
+  const obj2 = getData(filepath2);
 
-  const flatLines = lines.flat();
-  return `{\n${flatLines.join('\n')}\n}`;
+  const diff = buildDiff(obj1, obj2);
+  return formatStylish(diff); // пока реализуем только stylish
 };
 
 export default genDiff;
